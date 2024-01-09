@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 
-function AddProductModal({ setOpen, open, newProduct, setNewProduct, handleAddProduct, setSelectedImage, selectedImage }) {
+function AddProductModal({ setOpen, open, newProduct, setNewProduct, handleAddUpdateProduct, setSelectedImage, selectedImage }) {
     const handleClose = () => setOpen(false);
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -111,7 +111,7 @@ function AddProductModal({ setOpen, open, newProduct, setNewProduct, handleAddPr
                         gap: 2
                     }}>
                         <Button onClick={handleClose} variant='outlined' color='error'>İptal Et</Button>
-                        <Button onClick={handleAddProduct} variant='outlined'>Ekle</Button>
+                        <Button onClick={handleAddUpdateProduct} variant='outlined'>Ekle</Button>
                     </Box>
                 </Box>
             </Modal>

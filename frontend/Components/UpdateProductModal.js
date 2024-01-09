@@ -16,8 +16,8 @@ const style = {
 };
 
 
-function UpdateProductModal({ isUpdated, setIsUpdated, selectedProduct, setProducts }) {
-    const [updatedTitle, setUpdatedTitle] = useState(selectedProduct ? selectedProduct.head : "");
+function UpdateProductModal({ isUpdated, setIsUpdated, selectedProduct, setProducts, handleAddUpdateProduct }) {
+    const [updatedTitle, setUpdatedTitle] = useState(selectedProduct ? selectedProduct.title : "");
     const [updatedContent, setUpdatedContent] = useState(selectedProduct ? selectedProduct.content : "");
     const [updatedPrice, setUpdatedPrice] = useState(selectedProduct ? selectedProduct.price : "");
     const [updatedCategory, setUpdatedCategory] = useState(selectedProduct ? selectedProduct.category : "");
@@ -35,7 +35,7 @@ function UpdateProductModal({ isUpdated, setIsUpdated, selectedProduct, setProdu
             product.id === selectedProduct.id
                 ? {
                     ...product,
-                    head: updatedTitle || product.head,
+                    title: updatedTitle || product.title,
                     content: updatedContent || product.content,
                     price: updatedPrice || product.price,
                     category: updatedCategory || product.category,
@@ -170,7 +170,7 @@ function UpdateProductModal({ isUpdated, setIsUpdated, selectedProduct, setProdu
                     gap: 2
                 }}>
                     <Button onClick={handleClose} variant='outlined' color='error'>İptal Et</Button>
-                    <Button variant="outlined" color="primary" onClick={handleUpdateProduct}>
+                    <Button variant="outlined" color="primary" onClick={handleAddUpdateProduct}>
                         Güncelle
                     </Button>
                 </Box>

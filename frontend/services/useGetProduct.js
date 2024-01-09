@@ -19,7 +19,7 @@ const fetcher = async (url) => {
 const useGetProduct = () => {
     const { data, error, isLoading, mutate } = useSWR('http://localhost:3001/api/products/', fetcher)
     return {
-        data, error, isLoading
+        data, error, isLoading, mutate
     }
 }
 const useCreateProduct = async (data) => {
@@ -57,5 +57,20 @@ const useDeleteProduct = async (productId) => {
         throw error;
     }
 };
+const useUpdateProduct = async (data) => {
+    try {
+        const response = await fetch('http://localhost:3001/api/products/', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                // Gerekirse diğer başlıkları buraya ekleyin
+            },
+            body: JSON.stringify(data),
+        });
+        return response
+    } catch (e) {
+        console.log(e)
+    }
+}
 
-export { useGetProduct, useCreateProduct, useDeleteProduct }
+export { useGetProduct, useCreateProduct, useDeleteProduct, useUpdateProduct }

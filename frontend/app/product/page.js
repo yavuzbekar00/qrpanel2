@@ -8,8 +8,7 @@ import AddProductModal from '@/Components/AddProductModal'
 import UpdateProductModal from '@/Components/UpdateProductModal'
 import DefaultImage from '@mui/icons-material/HideImage';
 import userData from '../../Database/userData.json'
-import { useGetProduct, useCreateProduct, useDeleteProduct } from '@/services/useGetProduct'
-import { mutate } from 'swr'
+import { useGetProduct, useCreateProduct, useDeleteProduct, useUpdateProduct } from '@/services/useGetProduct'
 
 function Page() {
   const { data, isLoading, mutate } = useGetProduct()
@@ -27,47 +26,42 @@ function Page() {
       price: ""
     }
   );
+  console.log(selectedImage)
 
 
   const handleOpen = () => {
     setOpen(true)
   }
 
-  const handleAddProduct = () => {
+  console.log(selectedProduct)
+  const handleAddUpdateProduct = () => {
     const productLastVersion = {
       ...newProduct,
       image: selectedImage,
     };
+    console.log(selectedProduct)
 
-    if (
-      newProduct.head !== "" &&
-      newProduct.content !== "" &&
-      newProduct.price !== "" &&
-      newProduct.category !== undefined
-    ) {
-      try {
-        userData.users[0].products.push(productLastVersion);
-        useCreateProduct(productLastVersion);
-        mutate(false);
 
-        setNewProduct({
-          head: "",
-          content: "",
-          price: "",
-          category: undefined,
-        });
-        setSelectedImage(null);
-      } catch (e) {
-        console.log(e);
+    try {
+      userData.users[0].products.push(productLastVersion);
+      if (selectedProduct) {
+        useUpdateProduct(productLastVersion)
+      } else {
+        useCreateProduct(productLastVersion)
       }
-      setOpen(false);
-    } else {
-      if (newProduct.head === "") alert("Lütfen Ürün Başlığını Girin!");
-      else if (newProduct.content === "") alert("Lütfen Ürün İçeriğini Girin!");
-      else if (newProduct.price === "") alert("Lütfen Ürün Fiyatını Girin!");
-      else if (newProduct.category === undefined)
-        alert("Lütfen Bir Kategori Seçin!");
+      mutate();
+      setNewProduct({
+        title: "",
+        content: "",
+        price: "",
+        category: undefined,
+      });
+      setSelectedImage(null);
+    } catch (e) {
+      console.log(e);
     }
+    setOpen(false);
+
   };
 
 
@@ -95,6 +89,9 @@ function Page() {
 
   if (isLoading) {
     return <div>Loading</div>
+  }
+  if (!data) {
+    return null
   }
 
 
@@ -127,7 +124,7 @@ function Page() {
                     <Button onClick={handleOpen}><AddIcon />Yeni Ürün Ekle</Button>
                   </Card>
                 </Box>
-                <AddProductModal selectedImage={selectedImage} setSelectedImage={setSelectedImage} handleAddProduct={handleAddProduct} newProduct={newProduct} setNewProduct={setNewProduct} open={open} setOpen={setOpen}></AddProductModal>
+                <AddProductModal selectedImage={selectedImage} setSelectedImage={setSelectedImage} handleAddUpdateProduct={handleAddUpdateProduct} newProduct={newProduct} setNewProduct={setNewProduct} open={open} setOpen={setOpen}></AddProductModal>
               </Stack>
             </Container>
           </Box>
@@ -137,7 +134,7 @@ function Page() {
             flexWrap: "wrap",
           }}>
             {
-              data?.filter((item) => Boolean(item.title)).map((product) => (
+              data?.map((product) => (
                 <Card
                   key={product._id}
                   sx={{
@@ -258,6 +255,7 @@ function Page() {
 
           </Box>
           <UpdateProductModal
+            handleAddUpdateProduct={handleAddUpdateProduct}
             isUpdated={isUpdated}
             setIsUpdated={setIsUpdated}
             selectedProduct={selectedProduct}
